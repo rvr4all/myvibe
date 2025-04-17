@@ -6,8 +6,10 @@ export default function App() {
     danceability: 0.5,
     energy: 0.5,
     valence: 0.5,
-    tempo: 120
+    tempo: 120,
+    popularity: 50,
   });
+  const [artistName, setArtistName] = useState("");
   const [recommendations, setRecommendations] = useState([]);
   const [selectedUrl, setSelectedUrl] = useState(null);
 
@@ -17,7 +19,11 @@ export default function App() {
   };
 
   const getRecommendations = async () => {
-    const res = await axios.post("http://localhost:8000/recommend", features);
+    const payload = {
+      features,
+      artist: artistName
+    };
+    const res = await axios.post("http://localhost:8000/recommend", payload);
     setRecommendations(res.data);
   };
 
@@ -26,21 +32,36 @@ export default function App() {
       {/* Left side: Sliders + Song list */}
       <div style={{ width: "50%", paddingRight: "2rem" }}>
         <h2>🎵 MyVibe Recommender</h2>
+
+        {/* Feature sliders */}
         {Object.entries(features).map(([key, value]) => (
           <div key={key} style={{ marginBottom: "1rem" }}>
             <label>{key}: {value}</label><br />
             <input
               type="range"
               name={key}
-              min={key === "tempo" ? 60 : 0}
-              max={key === "tempo" ? 200 : 1}
-              step={key === "tempo" ? 1 : 0.01}
+              min={key === "tempo" ? 60 : key === "popularity" ? 0 : 0}
+              max={key === "tempo" ? 200 : key === "popularity" ? 100 : 1}
+              step={key === "tempo" || key === "popularity" ? 1 : 0.01}
               value={value}
               onChange={handleChange}
               style={{ width: "100%" }}
             />
           </div>
         ))}
+
+        {/* Artist name input */}
+        <div style={{ marginBottom: "1rem" }}>
+          <label>Artist Name:</label><br />
+          <input
+            type="text"
+            value={artistName}
+            onChange={(e) => setArtistName(e.target.value)}
+            placeholder="e.g. Dua Lipa"
+            style={{ width: "100%", padding: "0.5rem" }}
+          />
+        </div>
+
         <button onClick={getRecommendations}>Recommend Songs</button>
 
         <h3>Recommendations</h3>
@@ -53,7 +74,6 @@ export default function App() {
             >
               ▶️ Preview
             </button>
-
           </div>
         ))}
       </div>
@@ -62,19 +82,18 @@ export default function App() {
       <div style={{ width: "50%" }}>
         <h3>🎬 YouTube Preview</h3>
         {selectedUrl ? (
-            <iframe
-              width="100%"
-              height="315"
-              src={selectedUrl}
-              title="YouTube Preview"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          ) : (
-            <p>No song selected</p>
-          )}
-
+          <iframe
+            width="100%"
+            height="315"
+            src={selectedUrl}
+            title="YouTube Preview"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <p>No song selected</p>
+        )}
       </div>
     </div>
   );

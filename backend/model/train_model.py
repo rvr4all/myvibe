@@ -7,7 +7,7 @@ import os
 df = pd.read_csv(os.path.join("..", "data", "spotify_tracks.csv"))
 
 # Select features
-features = df[['danceability', 'energy', 'valence', 'tempo']]
+features = df[['danceability', 'energy', 'valence', 'tempo', 'popularity']]
 
 # Train model
 model = NearestNeighbors(n_neighbors=5)
