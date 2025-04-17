@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+scikit-learn
+pandas
+numpy
+python-multipart
+youtube-search-python==1.6.5
+httpx<0.24
+
+
+
