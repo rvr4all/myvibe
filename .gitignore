@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.log
+
+# Node.js / React
+frontend/node_modules/
+dist/
+
+# VSCode / Editor configs
+.vscode/
+.history/
+
+# Environment/Security
+.env
+.DS_Store
